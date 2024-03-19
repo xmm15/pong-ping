@@ -44,6 +44,29 @@
     call EndDrawing
 %endmacro
 
+%macro __draw_circle 4
+    mov rdi, %1
+    mov rsi, %2
+    mov rax, %3
+    cvtsi2ss xmm0, eax
+    mov rdx, %4
+    call DrawCircle
+%endmacro
+
+%macro __draw_rect 5
+    mov rdi, %1
+    mov rsi, %2
+    mov rdx, %3
+    mov rcx, %4
+    mov r8,  %5
+    call DrawRectangle
+%endmacro
+
+%macro __clear_bg 1
+    mov rdi, %1
+    call ClearBackground
+%endmacro
+
 %define void 0
 
 %define init_window(a, b, c)    __init_window a, b, c
@@ -51,7 +74,10 @@
 %define window_should_close(a)  __window_should_close
 %define set_target_fps(a)       __set_target_fps a
 %define begin_drawing(a)        __begin_drawing
-%define end_drawing(a)             __end_drawing
+%define end_drawing(a)          __end_drawing
+%define draw_circle(a, b, c, d) __draw_circle a, b, c, d
+%define draw_rectangle(a, b, c, d, e) __draw_rect a, b, c, d, e
+%define clear_background(a)     __clear_bg a
 
 extern InitWindow
 extern CloseWindow
@@ -60,6 +86,9 @@ extern exit
 extern SetTargetFPS
 extern BeginDrawing
 extern EndDrawing
+extern DrawCircle
+extern DrawRectangle
+extern ClearBackground
 
 ;If the size of the structure, in bytes, is ≤ 8, 
 ;then the the entire structure 
