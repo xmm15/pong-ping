@@ -12,5 +12,7 @@ if [ ! -e "$1.asm" ]; then
     exit
 fi
 # Compile, assemble, and link.
-yasm -Worphan-labels -g dwarf2 -f elf64 $1.asm -l $1.lst
-ld -g -o $1 $1.o -no-pie
+# -Worphan-labels -g dwarf2 
+yasm -f elf64 $1.asm -l $1.lst
+ld -g -o $1 $1.o -dynamic-linker /lib64/ld-linux-x86-64.so.2 -lc -lraylib -lm
+# -no-pie 
