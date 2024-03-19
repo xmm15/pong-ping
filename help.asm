@@ -160,6 +160,22 @@ endstruc
     call CheckCollisionCircleRec
 %endmacro
 
+%macro __draw_text 5
+    mov rdi, %1
+    mov rsi, %2
+    mov rdx, %3
+    mov rcx, %4
+    mov r8,  %5
+    call DrawText
+%endmacro
+
+txt_fmt: db "%i", 0
+%macro __text_fmt 1
+    mov rdi, txt_fmt
+    mov esi, %1
+    call TextFormat
+%endmacro
+
 
 %define void 0
 %define KEY_DOWN 265
@@ -177,6 +193,8 @@ endstruc
 %define draw_line(a,b,c,d,e)        __draw_line a, b, c, d, e
 %define is_key_down(a)              __is_key_down a
 %define check_collision_circle_rec(a,b,c,d,e,f,g) __check_colCR a,b,c,d,e,f,g
+%define draw_text(a, b, c, d, e)       __draw_text a, b, c, d, e
+%define text_fmt(a)                 __text_fmt a
 
 extern InitWindow
 extern CloseWindow
@@ -191,6 +209,8 @@ extern ClearBackground
 extern DrawLine
 extern IsKeyDown
 extern CheckCollisionCircleRec
+extern DrawText
+extern TextFormat
 
 ;If the size of the structure, in bytes, is ≤ 8, 
 ;then the the entire structure 
