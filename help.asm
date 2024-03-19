@@ -34,6 +34,17 @@ endstruc
 
 %define sys_exit(status) __exit status
 
+%macro __div_i32 2
+    mov eax, %1
+    cdq
+    sub rsp, 4
+    mov dword [rsp], %2
+    idiv dword [rsp]
+    add rsp, 4
+%endmacro
+
+%define div_i32(a, b) __div_i32 a, b
+
 %macro begin 0
     push rbp
     mov rbp, rsp
@@ -110,7 +121,14 @@ endstruc
     call DrawLine
 %endmacro
 
+%macro __is_key_down 1
+    mov rdi, %1
+    call IsKeyDown
+%endmacro
+
 %define void 0
+%define KEY_DOWN 265
+%define KEY_UP 264
 
 %define init_window(a, b, c)        __init_window a, b, c
 %define close_window(a)             __close_window
@@ -122,6 +140,7 @@ endstruc
 %define draw_rectangle(a,b,c,d,e)   __draw_rect a, b, c, d, e
 %define clear_background(a)         __clear_bg a
 %define draw_line(a,b,c,d,e)        __draw_line a, b, c, d, e
+%define is_key_down(a)              __is_key_down a
 
 extern InitWindow
 extern CloseWindow
@@ -134,6 +153,7 @@ extern DrawCircle
 extern DrawRectangle
 extern ClearBackground
 extern DrawLine
+extern IsKeyDown
 
 ;If the size of the structure, in bytes, is ≤ 8, 
 ;then the the entire structure 
