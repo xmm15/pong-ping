@@ -3,3 +3,5 @@ a.out
 pong
 *.lst
 *.o
+*.jmp
+test.*

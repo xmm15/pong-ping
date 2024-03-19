@@ -126,6 +126,41 @@ endstruc
     call IsKeyDown
 %endmacro
 
+%macro __check_colCR 7
+    sub    rsp,32
+
+    ;; rectangle
+    cvtsi2ss  xmm0, %4
+    movss  dword [rsp+16], xmm0
+    cvtsi2ss  xmm0, %5
+    movss  dword [rsp+20],xmm0
+    cvtsi2ss  xmm0, %6
+    movss  dword [rsp+24],xmm0
+    cvtsi2ss  xmm0, %7
+    movss  dword [rsp+28],xmm0
+
+    pxor xmm0, xmm0
+
+    ;; vector
+    cvtsi2ss xmm0, %1
+    movss dword[rsp+8], xmm0
+    cvtsi2ss xmm0, %2
+    movss dword[rsp+12], xmm0
+
+    ;; radius
+    cvtsi2ss xmm1, %3
+
+    ;; arrange
+    movq xmm0, qword[rsp+8]
+    movq xmm2, qword[rsp+16]
+    movq xmm3, qword[rsp+24]
+
+    add rsp, 32
+
+    call CheckCollisionCircleRec
+%endmacro
+
+
 %define void 0
 %define KEY_DOWN 265
 %define KEY_UP 264
@@ -141,6 +176,7 @@ endstruc
 %define clear_background(a)         __clear_bg a
 %define draw_line(a,b,c,d,e)        __draw_line a, b, c, d, e
 %define is_key_down(a)              __is_key_down a
+%define check_collision_circle_rec(a,b,c,d,e,f,g) __check_colCR a,b,c,d,e,f,g
 
 extern InitWindow
 extern CloseWindow
@@ -154,7 +190,17 @@ extern DrawRectangle
 extern ClearBackground
 extern DrawLine
 extern IsKeyDown
+extern CheckCollisionCircleRec
 
 ;If the size of the structure, in bytes, is ≤ 8, 
 ;then the the entire structure 
 ;is packed into a single 64-bit register and passed through it. 
+
+;01234567 89ABCDEF 01234567 89ABCDEF
+
+;FEDCBA98 76543210 FEDCBA98 76543210
+
+;00 01 11 10
+;0   1  3  2
+
+;3210FEDC FEDCBA98 76543210 01234567

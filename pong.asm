@@ -57,6 +57,16 @@ _start:
     mov rdi, cpu_ai
     call UpdatePlayer
 
+    check_collision_circle_rec(dword[ball+Ball.x], dword[ball+Ball.y], dword[ball+Ball.radius], dword[player+Paddle.x], dword[player+Paddle.y], dword[player+Paddle.width], dword[player+Paddle.height])
+    cmp rax, 1
+    jne .L2
+    neg dword[ball+Ball.speed_x]
+.L2:
+    check_collision_circle_rec(dword[ball+Ball.x], dword[ball+Ball.y], dword[ball+Ball.radius], dword[cpu_ai+Paddle.x], dword[cpu_ai+Paddle.y], dword[cpu_ai+Paddle.width], dword[cpu_ai+Paddle.height])
+    cmp rax, 1
+    jne .L3
+    neg dword[ball+Ball.speed_x]
+.L3:
     call DrawBall
 
     mov rdi, player
